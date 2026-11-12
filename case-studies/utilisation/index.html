@@ -1489,14 +1489,189 @@ main h4, .col-h, .obs b, .four b, .rmap b, .who li h4, .measures dt, .surf li b,
 
 .cs-body > .rail { text-align: left; }
 .cs-body > .rail > * { width: 100%; max-width: none; margin-left: 0 !important; margin-right: 0 !important; justify-self: stretch; text-align: left; box-sizing: border-box; }
+
+/* ---------- hero prototype demo: a soft tap mark, a live caption, pressed state on the demo's target ---------- */
+.pp-tap { position: absolute; z-index: 5; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; background: rgba(0,93,172,.18); box-shadow: 0 0 0 2px rgba(0,93,172,.55); opacity: 0; transform: scale(.4); pointer-events: none; }
+.pp-tap.go { animation: ppTap .75s var(--ease) forwards; }
+@keyframes ppTap { 0% { opacity: 0; transform: scale(.4); } 30% { opacity: 1; transform: scale(1); } 60% { opacity: 1; transform: scale(.85); } 100% { opacity: 0; transform: scale(1.5); } }
+.hs.demo { background: rgba(0,93,172,.1); transition: background-color .2s; }
+.pp-cap { display: flex; align-items: center; justify-content: center; gap: .55rem; min-height: 2.6em; max-width: 26rem; text-align: center; font: 500 .9rem/1.35 var(--sans); color: var(--ink); }
+.pp-cap span { opacity: 1; }
+.pp-cap.in span { animation: ppCap .5s var(--ease); }
+@keyframes ppCap { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.pp-dot { flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--mute); }
+.hero-proto.demo .pp-dot { background: var(--accent); box-shadow: 0 0 0 3px rgba(0,93,172,.15); }
+.pp-hint { margin-top: -.5rem; }
+
+/* screen swap: outgoing screen clears quickly, incoming one settles in after it, so screens never visibly overlap */
+.pp-scr { transition: opacity .18s ease-out, transform .5s var(--ease), visibility 0s .18s; }
+.pp-scr.on { transition: opacity .4s var(--ease) .14s, transform .55s var(--ease) .14s, visibility 0s 0s; }
+
+/* =====================================================================
+   HERO v4: copy + the journey on the left, the live prototype on a soft disc on the right; fits one screen
+   ===================================================================== */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hero .wrap { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); column-gap: clamp(2rem, 5vw, 5rem); align-items: center; padding-top: clamp(1.5rem, 3vh, 2.5rem); }
+.hero h1 { font-size: clamp(2.4rem, 3.9vw, 3.9rem); max-width: 15ch; }
+.hero .lede { margin-top: 1.1rem; max-width: 30rem; font-size: 1.05rem; }
+/* the journey list */
+.hj { margin-top: clamp(1.4rem, 3vh, 2rem); max-width: 30rem; border-top: 1px solid rgba(23,25,28,.12); }
+.hj button { position: relative; display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); column-gap: .2rem; width: 100%; padding: .75rem 0 .75rem 1rem; border: 0; border-bottom: 1px solid rgba(23,25,28,.08); background: none; text-align: left; font: inherit; cursor: pointer; }
+.hj button::before { content: ""; position: absolute; left: 0; top: .7rem; bottom: .7rem; width: 2px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform .45s var(--ease); }
+.hj .n { grid-row: span 2; padding-top: .2rem; font: 500 .68rem/1 var(--mono); color: #9A9DA2; transition: color .3s var(--ease); }
+.hj b { font-weight: 500; font-size: .98rem; color: #6B6F76; transition: color .3s var(--ease); }
+.hj .t { display: grid; grid-template-rows: 0fr; overflow: hidden; font-size: .88rem; line-height: 1.45; color: var(--fg); opacity: 0; transition: opacity .35s var(--ease), margin .35s var(--ease); }
+.hj button.on::before { transform: scaleY(1); }
+.hj button.on .n { color: var(--accent); }
+.hj button.on b, .hj button:hover b { color: var(--ink); }
+.hj button.on .t { opacity: 1; margin-top: .2rem; }
+.hj button:not(.on) .t { height: 0; }
+.hj button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.hj-hint { display: flex; align-items: center; gap: .5rem; margin-top: .9rem; font: 400 .7rem/1.4 var(--mono); color: var(--mute); }
+.hj-hint #hjState { color: var(--ink); }
+.hero.demo .pp-dot { background: var(--accent); box-shadow: 0 0 0 3px rgba(0,93,172,.15); }
+.hero.manual .hj-sep { display: none; }
+/* the phone on a disc */
+.hero-proto { position: relative; isolation: isolate; gap: 0; }
+.hero-proto::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: min(118%, 560px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: #E5EFF8; }
+.hero-proto::after { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: min(86%, 410px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(0,93,172,.14); }
+.pp-ph { --w: clamp(240px, min(24vw, calc((100svh - var(--bar) - 190px) * .45)), 310px); }
+.hero .meta { margin-top: clamp(1.6rem, 3.5vh, 2.6rem); }
+@media (max-width: 1024px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); row-gap: 2.5rem; }
+  .hero-proto { padding: 2rem 0; }
+}
+@media (max-width: 600px) { .hero-proto::before { width: 96vw; } .hero-proto::after { width: 74vw; } .hj-sep { display: none; } }
+
+/* ---------- HERO v5: quiet. Headline, one sentence, the prototype, the meta strip. No disc, no list, no tint ---------- */
+.hero { background: var(--bg) !important; }
+.hero .label { color: var(--mute) !important; }
+.hero h1 { font-size: clamp(2.2rem, 3.4vw, 3.4rem); max-width: 16ch; }
+.hero .lede { max-width: 28rem; font-size: 1.02rem; color: var(--fg); }
+.hero-proto::before, .hero-proto::after { display: none; }
+.hero-proto { gap: .9rem; }
+.pp-ph { box-shadow: inset 0 0 0 1px rgba(255,255,255,.14), 0 0 0 1px rgba(10,14,20,.2), 0 24px 48px -36px rgba(7,30,54,.35); }
+.pp-note { font: 400 .7rem/1.4 var(--mono); letter-spacing: .02em; color: var(--mute); }
+.pp-tap { background: rgba(0,93,172,.1); box-shadow: 0 0 0 1.5px rgba(0,93,172,.4); }
+.hs.demo { background: rgba(0,93,172,.06); }
+.hero .wrap { align-items: center; }
+
+/* ---------- hero: a step more presence, still quiet ---------- */
+.hero h1 { font-size: clamp(2.6rem, 4.4vw, 4.4rem); max-width: 14ch; line-height: 1; }
+.hero .label { font-size: .72rem; }
+.hero .lede { max-width: 31rem; margin-top: 1.4rem; font-size: 1.12rem; line-height: 1.6; color: #45494F; }
+.pp-ph { --w: clamp(260px, min(26vw, calc((100svh - var(--bar) - 170px) * .47)), 345px); }
+.hero .wrap { column-gap: clamp(2rem, 4vw, 4rem); }
+
+/* ---------- 08: the client-preference result, set large, before the measures ---------- */
+.pref { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: end; column-gap: clamp(1.2rem, 3vw, 2.4rem); margin-bottom: clamp(2.5rem, 5vw, 3.5rem); padding: clamp(1.6rem, 3vw, 2.2rem) 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
+.pref-k { font-size: clamp(4rem, 9vw, 7.5rem); line-height: .85; font-weight: 500; letter-spacing: -.06em; color: var(--accent); }
+.pref-h { max-width: 26ch; font-size: clamp(1.3rem, 2.2vw, 1.85rem); line-height: 1.2; letter-spacing: -.025em; color: var(--ink); font-weight: 500; }
+.pref-s { margin-top: .6rem; font: 400 .74rem/1.4 var(--mono); color: var(--mute); }
+@media (max-width: 600px) { .pref { grid-template-columns: minmax(0, 1fr); row-gap: .8rem; } }
+
+/* ---------- 08 v3: the client finding first and large; proposed measures compact and clearly labelled ---------- */
+#numbers .opener.ov { margin-bottom: clamp(1.8rem, 3.5vw, 2.6rem); }
+#numbers .pref { display: block; margin: 0 0 clamp(3rem, 6vw, 4.5rem); padding: clamp(1.4rem, 3vw, 2rem) 0 0 clamp(1.1rem, 2vw, 1.6rem); border: 0; border-left: 3px solid var(--accent); }
+.pref-tag { font: 500 .68rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+#numbers .pref-h { margin-top: .9rem; max-width: 30ch; font-size: clamp(1.6rem, 2.8vw, 2.4rem); line-height: 1.18; letter-spacing: -.03em; color: var(--ink); font-weight: 500; }
+.nextm { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 2fr); column-gap: clamp(2rem, 5vw, 4rem); padding-top: 1.4rem; border-top: 1px solid var(--line); }
+.nextm-h h4 { font-size: var(--t-item, 1.0625rem); color: var(--ink); }
+.nextm-h p { margin-top: .5rem; max-width: 18rem; font-size: .88rem; line-height: 1.5; color: var(--mute); }
+.nextm dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.5rem, 3vw, 2.5rem); margin: 0; }
+.nextm dl > div { padding: 0 0 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.nextm dl > div:nth-last-child(-n+2) { border-bottom: 0; margin-bottom: 0; }
+.nextm dt { font-size: .95rem !important; font-weight: 500; color: var(--fg); }
+.nextm dd { margin: .25rem 0 0; font-size: .88rem !important; line-height: 1.5; color: var(--mute); }
+@media (max-width: 860px) { .nextm { grid-template-columns: minmax(0, 1fr); row-gap: 1.2rem; } }
+@media (max-width: 600px) { .nextm dl { grid-template-columns: minmax(0, 1fr); } .nextm dl > div:nth-last-child(2) { border-bottom: 1px solid var(--line); margin-bottom: 1rem; } }
+
+/* ---------- 09.1 unlock your benefits: four states on one line that fills once; the last state turns from Locked to Available ---------- */
+.unl { margin-top: clamp(3.5rem, 7vw, 5rem); padding-top: clamp(2.5rem, 5vw, 3.5rem); border-top: 1px solid rgba(23,25,28,.1); }
+.unl-head h3 { margin-top: .8rem; max-width: 22ch; }
+.unl-head p { margin-top: .9rem; max-width: 40rem; font-size: 1rem; line-height: 1.6; color: var(--fg); }
+.unl-steps { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: clamp(1rem, 2.4vw, 2rem); margin-top: clamp(2rem, 4vw, 2.8rem); padding-top: 1.4rem; }
+.unl-steps::before, .unl-steps::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; }
+.unl-steps::before { background: var(--line); }
+.unl-steps::after { background: var(--accent); transform-origin: left; }
+.unl-steps li { display: grid; align-content: start; gap: .35rem; }
+.unl-n { font: 500 .7rem/1 var(--mono); color: var(--accent); }
+.unl-steps b { margin-top: .3rem; font-size: var(--t-item, 1.0625rem); font-weight: 500; color: var(--ink); }
+.unl-steps p { font-size: .92rem; line-height: 1.5; color: var(--fg); }
+.unl-st { position: relative; display: inline-grid; justify-self: start; margin-top: .5rem; font: 500 .66rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.unl-st i { grid-area: 1 / 1; font-style: normal; transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.unl-b { color: var(--accent); opacity: 0; transform: translateY(4px); }
+.unl-last b { color: var(--accent); }
+.unl-rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(1rem, 2.4vw, 2rem); margin: clamp(2rem, 4vw, 2.8rem) 0 0; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.unl-rules dt { font-size: .95rem; font-weight: 500; color: var(--ink); }
+.unl-rules dd { margin: .3rem 0 0; font-size: .88rem; line-height: 1.5; color: var(--fg); }
+.unl .note { margin-top: 1.4rem; }
+/* one-time transition: the line fills across the four steps, then the last state changes */
+.unl-steps::after { transform: scaleX(0); }
+.unl-steps.in::after { transform: scaleX(1); transition: transform 1.6s cubic-bezier(.65,0,.35,1) .3s; }
+.unl-steps.in .unl-a { opacity: 0; transform: translateY(-4px); transition-delay: 1.9s; }
+.unl-steps.in .unl-b { opacity: 1; transform: none; transition-delay: 1.9s; }
+.static .unl-steps::after { transform: scaleX(1); }
+.static .unl-a { opacity: 0; } .static .unl-b { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .unl-steps::after { transform: scaleX(1); transition: none; } .unl-a { opacity: 0; } .unl-b { opacity: 1; transform: none; transition: none; } }
+@media (max-width: 860px) {
+  .unl-steps { grid-template-columns: minmax(0, 1fr); row-gap: 1.4rem; padding: 0 0 0 1.2rem; }
+  .unl-steps::before, .unl-steps::after { right: auto; bottom: 0; width: 2px; height: auto; }
+  .unl-steps::after { transform-origin: top; transform: scaleY(0); } .unl-steps.in::after { transform: scaleY(1); }
+  .unl-rules { grid-template-columns: minmax(0, 1fr); row-gap: 1rem; }
+}
+
+/* =====================================================================
+   PROJECT HEADER: back to portfolio · project title ... client. 76px on desktop, on the page padding
+   ===================================================================== */
+@media (min-width: 861px) { :root { --bar: 76px; } }
+.bar { background: rgba(250,248,243,.92); border-bottom: 1px solid rgba(23,25,28,.08); }
+.bar .wrap { gap: 0; }
+.back { display: inline-flex; align-items: center; gap: .45rem; color: var(--fg); font: 500 .86rem/1 var(--sans); text-decoration: none; transition: color .25s var(--ease); }
+.back svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
+.back:hover { color: var(--accent); }
+.back:hover svg { transform: translateX(-3px); }
+.back:focus-visible, .bar .brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+.hd-sep { width: 1px; height: 18px; margin: 0 1.1rem; background: rgba(23,25,28,.14); }
+.bar .brand { font: 500 1.02rem/1 var(--sans) !important; letter-spacing: -.015em; color: var(--ink) !important; }
+.hd-client { margin-left: auto; font: 500 .66rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); white-space: nowrap; }
+.bar .toc-btn { margin-left: 1.2rem; }
+@media (max-width: 1023px) { .hd-client { display: none; } .bar .toc-btn { margin-left: auto; } }
+@media (max-width: 600px) { .back span { display: none; } .hd-sep { margin: 0 .8rem; } .bar .now-ch { display: none !important; } }
+
+/* ---------- header detail: title + descriptor on the left, labelled project facts on the right ---------- */
+.bar .brand { display: grid; gap: .3rem; text-decoration: none; }
+.hd-t { font: 500 1.02rem/1 var(--sans); letter-spacing: -.015em; color: var(--ink); }
+.hd-d { font: 400 .72rem/1 var(--sans); color: var(--mute); letter-spacing: 0; }
+.hd-sep { height: 28px; }
+.hd-meta { display: flex; gap: clamp(1.2rem, 2.4vw, 2.2rem); margin: 0 0 0 auto; }
+.hd-meta div { display: grid; gap: .32rem; padding-left: clamp(1.2rem, 2.4vw, 2.2rem); border-left: 1px solid rgba(23,25,28,.1); }
+.hd-meta div:first-child { padding-left: 0; border-left: 0; }
+.hd-meta dt { font: 500 .6rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+.hd-meta dd { margin: 0; font: 500 .8rem/1 var(--sans); color: var(--ink); white-space: nowrap; }
+.bar .prog { height: 2px; background: var(--accent); }
+@media (max-width: 1279px) { .hd-meta div:nth-child(3) { display: none; } }
+@media (max-width: 1023px) { .hd-meta { display: none; } }
+@media (max-width: 600px) { .hd-d { display: none; } }
+
+.bar .brand .hd-t { display: block !important; color: var(--ink) !important; font-weight: 500 !important; }
+.bar .brand .hd-d { display: block !important; color: var(--mute) !important; font-weight: 400 !important; }
+@media (max-width: 600px) { .bar .brand .hd-d { display: none !important; } }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h13a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H3"/><circle cx="15.5" cy="12.5" r=".9"/></symbol></svg>
 
 <nav class="bar" aria-label="Chapters">
   <div class="wrap">
-    <a class="brand" href="#top">Utilisation</a>
+    <a class="back" href="../../" aria-label="Back to portfolio"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg><span>Back to portfolio</span></a>
+    <i class="hd-sep" aria-hidden="true"></i>
+    <a class="brand" href="#top"><span class="hd-t">Utilisation</span><span class="hd-d">My Plans &amp; Usage Summary redesign</span></a>
     <span class="now-ch" id="nowCh" aria-live="polite"></span>
+    <dl class="hd-meta">
+      <div><dt>Client</dt><dd>Bajaj Finserv Health</dd></div>
+      <div><dt>Role</dt><dd>UX / Product Designer</dd></div>
+      <div><dt>Platform</dt><dd>Mobile app &amp; PWA</dd></div>
+    </dl>
     <button class="toc-btn" id="tocBtn" type="button" aria-expanded="false" aria-controls="chapters">Contents <span aria-hidden="true">+</span></button>
     <ol class="chapters" id="chapters" hidden></ol>
   </div>
@@ -1506,8 +1681,17 @@ main h4, .col-h, .obs b, .four b, .rmap b, .who li h4, .measures dt, .surf li b,
   <div class="wrap">
     <div class="hero-copy">
       <span class="label">Bajaj Finserv Health · Case study</span>
-      <h1>Helping employees find and use <em>their health benefits.</em></h1>
-      <p class="lede">Access your employer-sponsored OPD benefits, check available balances, understand what's covered and use your wallet to book eligible healthcare services, all in one place.</p>
+      <h1>Employer OPD benefits, <em>easy to find, check and use.</em></h1>
+      <p class="lede">I redesigned the Bajaj Finserv Health wallet so members can see what their plan covers, how much is left and who it's for, then book eligible care from the same place.</p>
+      <ol class="hj sr-only" id="hj" aria-label="The journey in the prototype">
+        <li><button type="button" class="on" data-go="home"><span class="n">01</span><b>Wallet home</b><span class="t">Plan, members and every benefit on one screen.</span></button></li>
+        <li><button type="button" data-go="bal"><span class="n">02</span><b>Balance</b><span class="t">What's left on each benefit, against its limit.</span></button></li>
+        <li><button type="button" data-go="elig"><span class="n">03</span><b>Coverage &amp; members</b><span class="t">Who's eligible and what applies, before booking.</span></button></li>
+        <li><button type="button" data-go="consult"><span class="n">04</span><b>Book</b><span class="t">Straight into the doctor or lab service.</span></button></li>
+      </ol>
+      <p class="hj-hint sr-only"><i class="pp-dot" aria-hidden="true"></i><span id="hjState">Playing the journey</span><span class="hj-sep"> · tap the phone to try it</span></p>
+      <span id="ppCap" class="sr-only" aria-live="polite"></span>
+
     </div>
     <div class="hero-proto" id="proto">
       <div class="ph pp-ph"><div class="sc pp-sc">
@@ -1516,14 +1700,9 @@ main h4, .col-h, .obs b, .four b, .rmap b, .who li h4, .measures dt, .surf li b,
         <div class="pp-scr pp-sheet" data-s="elig" role="region" aria-label="In-clinic consultation sheet" tabindex="-1"><div class="pp-img"><img src="img/cs/new-sheet-eligible.png" alt="In-clinic consultation sheet: eligible members with limit up to ₹25,000, inclusions, exclusions, waiting period and fair usage" loading="lazy"><button type="button" class="hs" style="top:93.4%;left:6%;width:88%;height:4%" data-go="consult" aria-label="Continue"></button></div></div>
         <div class="pp-scr pp-sheet" data-s="consult" role="region" aria-label="Choose type of consultation" tabindex="-1"><div class="pp-img"><img src="img/cs/new-sheet-consult.png" alt="Choose type of consultation: Insta consultation or Tele-consultation" loading="lazy"><button type="button" class="hs" style="top:92.6%;left:6%;width:88%;height:4.4%" data-go="home" aria-label="Close"></button></div></div>
         <div class="pp-scr pp-sheet" data-s="lab" role="region" aria-label="Select lab booking method" tabindex="-1"><div class="pp-img"><img src="img/cs/new-sheet-lab.png" alt="Select booking method: upload prescription, book lab test or call to book" loading="lazy"><button type="button" class="hs" style="top:92.6%;left:6%;width:88%;height:4.4%" data-go="home" aria-label="Close"></button></div></div>
+        <span class="pp-tap" aria-hidden="true"></span>
       </div></div>
-      <ol class="pp-steps" aria-label="Prototype journey">
-        <li><button type="button" class="on" data-go="home"><span>01</span>Wallet home</button></li>
-        <li><button type="button" data-go="bal"><span>02</span>Balance</button></li>
-        <li><button type="button" data-go="elig"><span>03</span>Coverage &amp; members</button></li>
-        <li><button type="button" data-go="consult"><span>04</span>Book</button></li>
-      </ol>
-      <p class="pp-hint">Scroll the screen, or tap View Balance, a benefit or a step.</p>
+      <p class="pp-note">Live prototype · scroll or tap to try it</p>
     </div>
     <dl class="meta">
       <div><dt>Role</dt><dd>UX / Product Designer</dd></div>
@@ -1808,30 +1987,23 @@ main h4, .col-h, .obs b, .four b, .rmap b, .who li h4, .measures dt, .surf li b,
   <!-- 08 NUMBERS -->
   <section class="ch" id="numbers" data-name="Numbers">
     <div class="wrap">
-      <div class="opener">
+      <div class="opener ov">
         <span class="mk rv"><b>08</b>Numbers</span>
-        <h2 class="rv">Impact: <em>not measured yet.</em></h2>
-        <p class="lede rv">I don't have post-launch data for this redesign. These are the measures I'd use, and what I expect them to show.</p>
+        <h2 class="rv">Early client feedback favoured <em>the redesigned experience.</em></h2>
       </div>
-      <div class="measures rv" data-sub="What I'd measure">
-        <h4 class="col-h">What I'd measure</h4>
+      <div class="pref rv" data-sub="Client feedback">
+        <p class="pref-tag">Client feedback · qualitative</p>
+        <p class="pref-h">All new corporate clients who had previously used the older layout preferred the redesigned experience.</p>
+      </div>
+      <div class="nextm rv" data-sub="What I'd measure next">
+        <div class="nextm-h"><h4>What I'd measure next</h4><p>Proposed measures, not results. Post-launch data isn't available yet.</p></div>
         <dl>
-          <div><dt>Benefit-to-booking conversion</dt><dd>Benefit or Utilize Now to a confirmed booking.</dd></div>
-          <div><dt>Eligibility-related errors</dt><dd>Bookings reversed for the wrong member or coverage.</dd></div>
-          <div><dt>Benefit support requests</dt><dd>Tickets on balances, coverage, unavailable benefits.</dd></div>
-          <div><dt>Wallet-paid bookings</dt><dd>Bookings paid fully from plan benefits, against out of pocket.</dd></div>
+          <div><dt>Benefit-to-booking conversion</dt><dd>Benefits selected through to confirmed bookings.</dd></div>
+          <div><dt>Eligibility-related errors</dt><dd>Bookings affected by incorrect member or coverage selection.</dd></div>
+          <div><dt>Benefit support requests</dt><dd>Queries about balances, coverage and unavailable benefits.</dd></div>
+          <div><dt>Wallet-paid bookings</dt><dd>Bookings paid using plan benefits versus out-of-pocket payments.</dd></div>
         </dl>
       </div>
-      <div class="expect rv" data-sub="What I expect">
-        <h4 class="col-h">What I expect them to show</h4>
-        <ol>
-          <li><h4>Less drop-off before booking</h4><p class="small">Members who can see coverage are less likely to leave.</p></li>
-          <li><h4>Less avoidable confusion</h4><p class="small">Fewer wrong-member bookings and co-pay surprises at checkout.</p></li>
-          <li><h4>Lower support demand</h4><p class="small">Fewer questions about balances and eligibility.</p></li>
-        </ol>
-        
-      </div>
-      <p class="note rv">Hypotheses, not measured outcomes. <span class="tbd">Launch status and analytics: to supply.</span></p>
     </div>
   </section>
 
@@ -1848,9 +2020,24 @@ main h4, .col-h, .obs b, .four b, .rmap b, .who li h4, .measures dt, .surf li b,
         <div class="rv"><h4>Keep the member and policy in view</h4><p class="small">The selected member and policy state have to carry through every screen, up to the booking.</p></div>
         <div class="rv"><h4>Design one structure for many plans</h4><p class="small">Partners configure benefits differently. A fixed plan card, member row and section pattern keeps every plan readable.</p></div>
       </div>
-      <div class="next rv" data-sub="What I'd do next">
-        <h4 class="col-h">What I'd do next</h4>
-        <ul><li>Replace chapter 08's placeholders with real data.</li><li>Test the four questions with members.</li><li>Design the expired and locked states.</li></ul>
+      <div class="unl" data-sub="Unlock benefits">
+        <div class="unl-head rv">
+          <span class="mk sub"><b>09.1</b>Unlock your benefits</span>
+          <h3>Unlock more benefits with <em>document verification.</em></h3>
+          <p>Some additional benefits become available once members submit the required documents and complete verification. This helps members access benefits they may not have been able to use earlier.</p>
+        </div>
+        <ol class="unl-steps rv">
+          <li><span class="unl-n">01</span><b>Discover</b><p>My Plans lists the benefits that can be unlocked, each with its wallet amount and an Unlock action.</p><span class="unl-st">Locked</span></li>
+          <li><span class="unl-n">02</span><b>Submit documents</b><p>The unlock drawer explains how to unlock, the amount it releases, and the documents that benefit needs.</p><span class="unl-st">Documents required</span></li>
+          <li><span class="unl-n">03</span><b>Verification</b><p>A confirmation and a timeline track the request while the documents are reviewed.</p><span class="unl-st">Under verification</span></li>
+          <li class="unl-last"><span class="unl-n">04</span><b>Unlocked</b><p>Once approved, the benefit appears at the top of its Health, Fitness or Wellness section with its balance.</p><span class="unl-st"><i class="unl-a">Locked</i><i class="unl-b">Available</i></span></li>
+        </ol>
+        <dl class="unl-rules rv">
+          <div><dt>Requirements differ</dt><dd>Each benefit lists its own documents. A shared wallet is unlocked as a whole by one set of documents.</dd></div>
+          <div><dt>One request per document type</dt><dd>Benefits needing the same document are verified together and approved or rejected together.</dd></div>
+          <div><dt>Not yet unlocked</dt><dd>Benefits awaiting verification stay locked. Deficient or rejected requests show their status and allow a re-upload.</dd></div>
+        </dl>
+        <p class="note rv">From the PRD (Unlock Benefits via Document Upload). Screens for this journey aren't in the supplied designs.</p>
       </div>
     </div>
   </section>
@@ -2061,15 +2248,59 @@ main h4, .col-h, .obs b, .four b, .rmap b, .who li h4, .measures dt, .surf li b,
     if ('IntersectionObserver' in window) watch(box, listen, { rootMargin: '100px 0px' }); else listen(true);
   })();
 
-  // hero prototype: real screens; hotspots and steps switch screens, each screen keeps its own scroll
+  // hero prototype: real screens. Taps on hotspots or steps switch screens. While the hero is in view and the reader
+  // hasn't touched it, a demo plays the real journey: scroll, a visible tap, the next screen. Any interaction hands over;
+  // the demo resumes after 10s idle. Reduced motion / static: no demo.
   (() => {
     const pp = document.getElementById('proto'); if (!pp) return;
-    const scr = [...pp.querySelectorAll('.pp-scr')], steps = [...pp.querySelectorAll('.pp-steps button')];
+    const sc = pp.querySelector('.pp-sc'), scr = [...pp.querySelectorAll('.pp-scr')], steps = [...document.querySelectorAll('#hj button')];
+    const tap = pp.querySelector('.pp-tap'), cap = document.getElementById('ppCap'), hint = document.getElementById('hjState'), hj = document.getElementById('hj'), hero = document.querySelector('.hero');
     const map = { home: 'home', bal: 'bal', elig: 'elig', consult: 'consult', lab: 'consult' };
+    const S = id => pp.querySelector('.pp-scr[data-s="' + id + '"]');
     const go = id => { scr.forEach(el => { const on = el.dataset.s === id; el.classList.toggle('on', on); el.tabIndex = on ? 0 : -1; el.setAttribute('aria-hidden', on ? 'false' : 'true'); if (on && id !== 'home') el.scrollTop = 0; });
       steps.forEach(b => b.classList.toggle('on', b.dataset.go === map[id])); };
     pp.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
+    hj.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
     go('home');
+    if (reduce || stat) { hint.textContent = 'Scroll the phone or pick a step'; hero.classList.add('manual'); return; }
+
+    let run = 0, inView = false, user = false, idle = null;
+    const wait = (ms, r) => new Promise((ok, no) => setTimeout(() => r === run ? ok() : no(), ms));
+    const glide = (el, to, ms, r) => new Promise((ok, no) => { const from = el.scrollTop, t0 = performance.now(), d = to - from;
+      const f = now => { if (r !== run) return no(); const k = Math.min(1, (now - t0) / ms), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; el.scrollTop = from + d * e; k < 1 ? requestAnimationFrame(f) : ok(); };
+      requestAnimationFrame(f); });
+    const say = t => { cap.textContent = t; };
+    const press = async (screen, label, r) => {
+      const el = S(screen), h = [...el.querySelectorAll('.hs')].find(x => x.getAttribute('aria-label') === label);
+      const hr = h.offsetTop, view = el.clientHeight;
+      if (hr < el.scrollTop + 40 || hr + h.offsetHeight > el.scrollTop + view - 40) await glide(el, Math.max(0, hr - view * .45), 1100, r);
+      const a = h.getBoundingClientRect(), b = sc.getBoundingClientRect();
+      tap.style.left = (a.left - b.left - sc.clientLeft + a.width / 2) + 'px'; tap.style.top = (a.top - b.top - sc.clientTop + a.height / 2) + 'px';
+      h.classList.add('demo'); tap.classList.remove('go'); void tap.offsetWidth; tap.classList.add('go');
+      await wait(650, r); h.classList.remove('demo'); go(h.dataset.go);
+    };
+    const tour = async r => {
+      for (;;) {
+        go('home'); S('home').scrollTop = 0;
+        say("The member opens My Plans: their employer's OPD plan."); await wait(1900, r);
+        say('View Balance shows what is left on the wallet.'); await press('home', 'View Balance', r); await wait(1500, r);
+        say('Each benefit shows its balance against its limit.'); await glide(S('bal'), 160, 1200, r); await wait(500, r);
+        say('Tapping a benefit opens who is covered and what applies.'); await press('bal', 'In-clinic consultation (Specialist)', r); await wait(1500, r);
+        say('Eligible members, limit, inclusions and exclusions, in one sheet.'); await glide(S('elig'), S('elig').scrollHeight, 1500, r); await wait(500, r);
+        await press('elig', 'Continue', r);
+        say('Continue goes straight to booking the consultation.'); await wait(2200, r);
+        await press('consult', 'Close', r); S('home').scrollTop = 0;
+        say('Benefits are grouped into Health, Fitness and Wellness.'); await glide(S('home'), S('home').scrollHeight * .44, 2600, r); await wait(400, r);
+        say('Lab tests go straight to choosing how to book.'); await press('home', 'Lab tests', r); await wait(2300, r);
+        await press('lab', 'Close', r); await glide(S('home'), 0, 900, r); await wait(600, r);
+      }
+    };
+    const start = () => { if (!inView || user) return; const r = ++run; hero.classList.add('demo'); hero.classList.remove('manual'); hint.textContent = 'Playing the journey'; tour(r).catch(() => {}); };
+    const stop = () => { run++; hero.classList.remove('demo'); tap.classList.remove('go'); };
+    const takeOver = () => { if (!user) { user = true; stop(); hero.classList.add('manual'); hint.textContent = 'Your turn'; say('Your turn: scroll the screen or tap a benefit.'); } clearTimeout(idle); idle = setTimeout(() => { user = false; start(); }, 10000); };
+    ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(t => { pp.addEventListener(t, takeOver, { passive: true }); hj.addEventListener(t, takeOver, { passive: true }); });
+    const img = pp.querySelector('.pp-img img');
+    (img.decode ? img.decode() : Promise.resolve()).catch(() => {}).then(() => watch(pp, v => { inView = v; if (v) start(); else stop(); }, { threshold: .35 }));
   })();
 
   // 07: compare in place — toggle Before/After on one phone; auto-alternates while visible until the reader uses it
